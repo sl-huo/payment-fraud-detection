@@ -75,11 +75,11 @@ Transaction Distribution across Browser Types
 ![5](asset/browser.png)  
 
 
-## PART 2 - Analysis & Modeling - TBC
+## PART 2 - Analysis & Modeling
 
 - Applied XGBoost and LGBM classification models to detect fraudulent online transactions. After initial rounds of hyperparameter tuning, LGBM(AUC score: 0.94) outperformed a bit compared with XGBoost model(AUC score: 0.93).
 - To further investigate hyperparameter influence and feature importance.
 
-AUC Curve for Tree Based Models
+AUC Score for Tree Based Models
 :-------------------------:
 ![6](asset/roc_curve.png)  
