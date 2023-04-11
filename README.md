@@ -13,16 +13,16 @@ The data comes from real-world e-commerce transactions, source: [IEEE-CIS Fraud 
 - Train Set: **590,540** transactions with **433** features
 - Test Set: **506,691** transactions with **433** features
 - Data Description:
-  - TransactionDT: timedelta from a given reference datetime (not an actual timestamp)
-  - TransactionAMT: transaction payment amount in USD
-  - ProductCD: product code, the product for each transaction
-  - card1 - card6: payment card information, such as card type, card category, issue bank, country, etc.
-  - addr: address
-  - dist: distance
+  - `TransactionDT`: timedelta from a given reference datetime (not an actual timestamp)
+  - `TransactionAMT`: transaction payment amount in USD
+  - `ProductCD`: product code, the product for each transaction
+  - `card1` - `card6`: payment card information, such as card type, card category, issue bank, country, etc.
+  - `addr`: address
+  - `dist`: distance
   - P_ and (R__) emaildomain: purchaser and recipient email domain
-  - C1-C14: counting, such as how many addresses are found to be associated with the payment card, etc. The actual meaning is masked.
-  - D1-D15: timedelta, such as days between previous transaction, etc.
-  - M1-M9: match, such as names on card and address, etc.
+  - `C1`-`C14`: counting, such as how many addresses are found to be associated with the payment card, etc. The actual meaning is masked.
+  - `D1`-`D15`: timedelta, such as days between previous transaction, etc.
+  - `M1`-`M9`: match, such as names on card and address, etc.
   - identity information – network connection information (IP, ISP, Proxy, etc) and digital signature (UA/browser/os/version, etc) associated with transactions.
 
 ## PART 1 - Data Wrangling & EDA
@@ -50,7 +50,7 @@ Transaction Distribution across Card Types
 ### Email Domains
 
 - Top purchaser email domains including gmail (46%), yahoo(20%), hotmail(9%) of the known transactions
-- Among the top email domains, 'mail.com' with highest percentage of fraud cases ~20%, while 'outlook.com' contains ~10%
+- Among the top email domains, '**mail.com**' with highest percentage of fraud cases ~20%, while '**outlook.com**' contains ~10%
 
 Transaction Distribution across Email Domains
 :-------------------------:
@@ -68,7 +68,7 @@ Quantiles for Counting Variables
 
 
 ### Web - Browser Types
-- Opera's percentage of fraudulent transactions is the highest among various categories with over 30%, while Chrome is the most popular web browser.
+- **Opera**'s percentage of fraudulent transactions is the highest among various categories with over 30%, while **Chrome** is the most popular web browser.
 
 Transaction Distribution across Browser Types
 :-------------------------:
@@ -77,9 +77,23 @@ Transaction Distribution across Browser Types
 
 ## PART 2 - Analysis & Modeling
 
-- Applied XGBoost and LGBM classification models to detect fraudulent online transactions. After initial rounds of hyperparameter tuning, LGBM(AUC score: 0.94) outperformed a bit compared with XGBoost model(AUC score: 0.93).
-- To further investigate hyperparameter influence and feature importance.
+### Model Performance Comparison
+- Applied **XGBoost** and **LGBM** classification models to detect fraudulent online transactions. After initial rounds of hyperparameter tuning, LGBM(AUC score: 0.94) outperformed a bit compared with XGBoost model(AUC score: 0.93).
+- Runtime of LGBM is much faster compared to XGBoost (runtime: 8 minutes vs 14 seconds), which makes LGBM a preferable model for hyperparameter tuning and model optimization.
 
-AUC Score for Tree Based Models
-:-------------------------:
-![6](asset/roc_curve.png)  
+<p align="center">
+  <img src="asset/roc_curve.png" />
+</p>
+
+
+### Feature Importance Comparison
+- Look further into feature importance from two models. Overall, number of splits is much lower from LGBM while the total gain of certain features is much higher, which also indicates LGBM split the decision tree more efficiently to reach relatively same result. 
+- There are quite a few feature overlaps between two models, top features with high total gain as well as high number of splits, such as `card6`(card type), `card2`(card number), `P_emaildomain`(purchaser email address), `C5` & `C7`(counting informaiton) are both identified from both models.
+- Impactful features, such as `V264`, which is an engineered feature ranks the top in both models, however, the number of splts is not among the top, indicates the significant impact of this feature on the target. It would be worth further looking at the split nodes of this feature.
+
+
+Feature Importance (XGBoost)   |  Feature Importance (LGBM) 
+:-------------------------:|:-------------------------:
+![1](asset/xgb_fscore_gain.png)  |  ![3](asset/lgbm_fscore_gain.png)
+![2](asset/xgb_fscore_weight.png)  |  ![4](asset/lgbm_fscore_split.png)
+
