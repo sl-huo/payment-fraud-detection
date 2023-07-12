@@ -79,7 +79,6 @@ Transaction Distribution across Browser Types
 
 ### Model Performance Comparison
 - Applied **XGBoost** and **LGBM** classification models to detect fraudulent online transactions. After initial rounds of hyperparameter tuning, LGBM(AUC score: 0.94) outperformed a bit compared with XGBoost model(AUC score: 0.93).
-- Runtime of LGBM is much faster compared to XGBoost (runtime: 8 minutes vs 14 seconds), which makes LGBM a preferable model for hyperparameter tuning and model optimization.
 
 <p align="center">
   <img src="asset/roc_curve.png" />
